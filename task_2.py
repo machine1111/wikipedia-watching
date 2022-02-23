@@ -76,17 +76,27 @@ async def print_wiki():
 
         lines = sorted(all_data, key=lambda k: k['count'], reverse=True)
         print('Total number of Wikipedia Domains Updated: {}\n'.format(len(lines)))
+
+        max_domain_len = len(max(domain_list, key=len))
+        max_count_len = len(str(lines[0]['count']))
+
         for line in lines:
-            print('{} : {} pages updated'.format(line['domain'], line['count']))
+            print(f"{str(line['domain']):<{max_domain_len}} : {str(line['count']):>{max_count_len}} pages updated")
 
         sorted_users = []
         for data in all_data:
             if data['domain'] == domain_check:
                 sorted_users = sorted(data['user_details'], key=lambda k: k['user_edit_count'], reverse=True)
         print('\nUsers who made changes to en.wikipedia.org\n')
+
+        usernames = [user['username'] for user in sorted_users]
+        max_username_len = len(max(usernames, key=len))
+        max_user_count_len = len(str(sorted_users[0]['user_edit_count']))
+
         for user in sorted_users:
             if not user['user_is_bot']:
-                print('{} : {}'.format(user['username'], user['user_edit_count']))
+                print(f"{str(user['username']):<{max_username_len}} : {str(user['user_edit_count']):>{max_user_count_len}}")
+
 
         wiki_list = []
         domain_list= []

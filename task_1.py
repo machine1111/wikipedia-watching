@@ -2,7 +2,7 @@ from aiosseclient import aiosseclient
 import asyncio
 import json
 
-# Set time and domain to monitor user changes
+
 print_after = 60
 domain_check = 'en.wikipedia.org'
 
@@ -51,8 +51,14 @@ async def print_wiki():
         # Printing domain updates
         lines = sorted(wiki_list, key=lambda k: k['count'], reverse=True)
         print('Total number of Wikipedia Domains Updated: {}\n'.format(len(lines)))
+
+        # lengths for string formatting
+        max_domain_len = len(max(domain_list, key=len))
+        max_count_len = len(str(lines[0]['count']))
+
         for line in lines:
-            print('{} : {} pages updated'.format(line['domain'], line['count']))
+            # print('{} : {} pages updated'.format(line['domain'], line['count']))
+            print(f"{str(line['domain']):<{max_domain_len}} : {str(line['count']):>{max_count_len}} pages updated")
 
         # Sorting users based on total edits
         sorted_users = []
@@ -62,12 +68,21 @@ async def print_wiki():
 
         # Printing user updates in domain set
         print('\nUsers who made changes to en.wikipedia.org\n')
+
+        # lengths for string formatting
+        usernames = [user['username'] for user in sorted_users]
+        max_username_len = len(max(usernames, key=len))
+        max_user_count_len = len(str(sorted_users[0]['user_edit_count']))
+
         for user in sorted_users:
             if not user['user_is_bot']:
-                print('{} : {}'.format(user['username'], user['user_edit_count']))
+                # print('{} : {}'.format(user['username'], user['user_edit_count']))
+                print(f"{str(user['username']):<{max_username_len}} : {str(user['user_edit_count']):>{max_user_count_len}}")
+
 
         wiki_list = []
         domain_list= []
+
 
 
 async def main():
